@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace TrabalhoPOON3.Model
 {
-    public class ClienteModel : Database
+    public class LocatarioModel : Database
     {
-
-        public static void AdicionarCliente(string cpf, string nome, string telefone) 
+        public static void AdicionarLocatario(string cpf, string nome, string telefone)
         {
             try
             {
@@ -32,7 +31,7 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarCliente(int id, string cpf, string nome, string telefone)
+        public static void EditarLocatario(int id, string cpf, string nome, string telefone)
         {
             try
             {
@@ -54,7 +53,7 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static DataTable ListarClientes()
+        public static DataTable ListarLocatarios()
         {
             SQLiteDataAdapter da = null;
             DataTable dt = new DataTable();
@@ -76,7 +75,7 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static DataTable BuscarClientePorID(int id)
+        public static DataTable BuscarLocatarioPorID(int id)
         {
             SQLiteDataAdapter da = null;
             DataTable dt = new DataTable();
@@ -100,12 +99,13 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static DataTable BuscarClientePorCPF(string cpf)
+        public static DataTable BuscarLocatarioPorCPF(string cpf)
         {
             SQLiteDataAdapter da = null;
             DataTable dt = new DataTable();
-            try {
-            
+            try
+            {
+
                 using (var cmd = conn().CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM cliente WHERE cliente.CPF =@cpf";
@@ -116,7 +116,8 @@ namespace TrabalhoPOON3.Model
                     return dt;
                 }
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
