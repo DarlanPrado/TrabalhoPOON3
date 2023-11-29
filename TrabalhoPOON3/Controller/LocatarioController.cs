@@ -8,7 +8,7 @@ using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.Controller
 {
-    public class LocatarioModel
+    public class LocatarioController
     {
         public void adicionarLocatario(string cpf, string nome, string telefone)
         {
@@ -33,6 +33,7 @@ namespace TrabalhoPOON3.Controller
             ClienteModel.AdicionarCliente(cpfTratado, nome, telefoneTratado);
         }
 
+        
         public void editarLocatario(int id, string cpf, string nome, string telefone)
         {
             string cpfTratado = cpf.Replace(" ", "").Replace(".", "").Replace("-", "");

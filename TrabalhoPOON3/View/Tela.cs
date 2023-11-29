@@ -34,13 +34,13 @@ namespace TrabalhoPOON3.View
         {
             this.MontarMoldura(0, 0, 119, 24);
             this.MontarLinhaHor(2, 0, 119);
-            this.Centralizar(1, 0, 119, "Banco de Dados");
+            this.CentralizarMensagem(0, 119, 1, "Banco");
         }
 
         public void MontarTelaSistema(int ci, int li, int cf, int lf,int lincen,string text)
         {
             this.MontarMoldura(ci, li, cf, lf);
-            this.Centralizar(lincen, ci, cf, text);
+            this.CentralizarMensagem(ci,cf,lincen,text);
         }
 
 
@@ -112,13 +112,16 @@ namespace TrabalhoPOON3.View
             Console.Write("+");
         }
 
-
-        public void Centralizar(int lin, int ci, int cf, string msg)
+        public void CentralizarMensagem(int ci, int cf, int lin, string mensagem)
         {
-            int col;
-            col = ci + ((cf - ci) / 2);
-            Console.SetCursorPosition(col, lin);
-            Console.Write(msg);
+            int larguraTela = cf - ci + 1;
+            int comprimentoMensagem = mensagem.Length;
+
+            int espacosAntes = larguraTela/2 - comprimentoMensagem/2;
+
+
+            Console.SetCursorPosition(ci + espacosAntes , lin);
+            Console.Write(mensagem);
         }
 
 

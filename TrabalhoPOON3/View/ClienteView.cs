@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using TrabalhoPOON3.Model;
 
-using System;
-using System.Collections.Generic;
-using TrabalhoPOON3.Model;
-
 namespace TrabalhoPOON3.View
 {
     public class ClienteView
@@ -27,7 +23,7 @@ namespace TrabalhoPOON3.View
                     "3 - Buscar Cliente por ID",
                     "4 - Buscar Cliente por CPF",
                     "0 - Sair"
-                }, 5, 5, 3);
+                }, 5, 5, 6);
 
                 switch (escolha)
                 {
@@ -38,7 +34,7 @@ namespace TrabalhoPOON3.View
                         ListarClientes();
                         break;
                     case "3":
-                        BuscarClientePorID();
+                        BuscarClientePorIDView();
                         break;
                     case "4":
                         BuscarClientePorCPF();
@@ -56,15 +52,20 @@ namespace TrabalhoPOON3.View
 
         private void CadastrarCliente()
         {
-            Console.WriteLine("== Cadastrar Cliente ==");
+            //
+            telaClienteView.LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            //
 
-            Console.Write("CPF: ");
+            telaClienteView.CentralizarMensagem(2, 117, 5, "== Cadastrar Usuario ==");
+
+            telaClienteView.CentralizarMensagem(2, 117, 6, "== CPF ==");
             string cpf = Console.ReadLine();
 
-            Console.Write("Nome: ");
+            telaClienteView.CentralizarMensagem(2, 117, 8, "== NOME ==");
             string nome = Console.ReadLine();
 
-            Console.Write("Telefone: ");
+            telaClienteView.CentralizarMensagem(2, 117, 10, "== TELEFONE ==");
             string telefone = Console.ReadLine();
 
             ClienteModel.AdicionarCliente(cpf, nome, telefone);
@@ -74,9 +75,13 @@ namespace TrabalhoPOON3.View
 
         private void ListarClientes()
         {
-            Console.WriteLine("== Lista de Clientes ==");
-
+            //
+            telaClienteView.LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            telaClienteView.CentralizarMensagem(2, 117, 5, "== Listar Cliente ==");
             var clientes = ClienteModel.ListarClientes();
+            //
+
 
             if (clientes.Rows.Count == 0)
             {
@@ -91,13 +96,20 @@ namespace TrabalhoPOON3.View
             }
         }
 
-        private void BuscarClientePorID()
+        private void BuscarClientePorIDView()
         {
-            Console.Write("Digite o ID do cliente: ");
-            int id;
-            if (int.TryParse(Console.ReadLine(), out id))
+            //
+            string id;
+            telaClienteView.LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            telaClienteView.CentralizarMensagem(2, 117, 5, "== Digite o id de cliente ==");
+            id = Console.ReadLine();
+            //
+
+
+            if (int.TryParse(id, out int numeroInt))
             {
-                var cliente = ClienteModel.BuscarClientePorID(id);
+                var cliente = ClienteModel.BuscarClientePorID(numeroInt);
 
                 if (cliente.Rows.Count > 0)
                 {
@@ -116,8 +128,12 @@ namespace TrabalhoPOON3.View
 
         private void BuscarClientePorCPF()
         {
-            Console.Write("Digite o CPF do cliente: ");
+            //
+            telaClienteView.LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            telaClienteView.CentralizarMensagem(2, 117, 5, "== Digite o CPF de cliente ==");
             string cpf = Console.ReadLine();
+            //
 
             var cliente = ClienteModel.BuscarClientePorCPF(cpf);
 
