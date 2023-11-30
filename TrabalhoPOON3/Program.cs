@@ -9,13 +9,15 @@ namespace TrabalhoPOON3.View
         {
             Tela tela = new Tela();
             ClienteView clienteView = new ClienteView();
+            LocatarioView locatarioView = new LocatarioView();
+            ImovelView imovelView = new ImovelView();
 
             string opcao;
             List<string> menuPrincipal = new List<string>();
 
             menuPrincipal.Add("1 - Área do Cliente");
-            menuPrincipal.Add("2 - Área do Imóvel");
-            menuPrincipal.Add("3 - Área do Locatário");
+            menuPrincipal.Add("2 - Área do Locatário");
+            menuPrincipal.Add("3 - Área do Imóvel");
             menuPrincipal.Add("0 - Sair");
 
             tela.ConfigurarTela();
@@ -33,7 +35,12 @@ namespace TrabalhoPOON3.View
                     case "1":
                         clienteView.MontarClienteView();
                         break;
-                    // Adicione cases para outras opções de menu, se necessário
+                    case "2":
+                        locatarioView.MontarLocatarioView();
+                        break;
+                    case "3":
+                        imovelView.MontarImovelView();
+                        break;
                     default:
                         Console.WriteLine("Opção inválida. Tente novamente.");
                         break;

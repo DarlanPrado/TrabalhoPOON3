@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +9,45 @@ namespace TrabalhoPOON3.Model
 {
     public class LocatarioModel : Database
     {
-        public static void AdicionarLocatario(string cpf, string nome, string telefone)
+        // Define o caminho do arquivo de texto que armazena os locatarios
+        private static string locatarioFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\locatario.txt";
+
+        public void AdicionarLocatario(string cpf, string nome, string telefone)
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
+                // Cria uma string com os dados do locatario separados por vírgula
+                string locatario = $"{cpf},{nome},{telefone}";
+
+                // Usa o método AppendAllText para adicionar o locatario ao final do arquivo de texto
+                File.AppendAllText(locatarioFilePath, locatario + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EditarLocatario(int id, string cpf, string nome, string telefone)
+        {
+            try
+            {
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] locatarios = File.ReadAllLines(locatarioFilePath);
+
+                // Verifica se o id é válido e menor que o tamanho do array
+                if (id > 0 && id <= locatarios.Length)
                 {
-                    cmd.CommandText = "INSERT INTO cliente (CPF, NOME, TELEFONE) VALUES (@cpf, @nome, @telefone)";
+                    // Substitui a linha correspondente ao id pelo novo locatario
+                    locatarios[id - 1] = $"{cpf},{nome},{telefone}";
 
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
-
-                    cmd.ExecuteNonQuery();
+                    // Escreve o array atualizado no arquivo de texto
+                    File.WriteAllLines(locatarioFilePath, locatarios);
+                }
+                else
+                {
+                    // Lança uma exceção se o id for inválido
+                    throw new ArgumentException("Id inválido");
                 }
             }
             catch (Exception ex)
@@ -31,21 +56,15 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarLocatario(int id, string cpf, string nome, string telefone)
+        public List<string> ListarLocatarios()
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "UPDATE cliente SET NOME = @nome, TELEFONE = @telefone, CPF = @cpf WHERE ID_CLIENTE = @id";
+                // Lê todas as linhas do arquivo de texto que armazena os locatarios
+                string[] locatarios = File.ReadAllLines(locatarioFilePath);
 
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-
-                    cmd.ExecuteNonQuery();
-                }
+                // Converte o array de locatarios para uma lista e retorna
+                return locatarios.ToList();
             }
             catch (Exception ex)
             {
@@ -53,66 +72,26 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static DataTable ListarLocatarios()
+        public string BuscarLocatarioPorCPF(string cpf)
         {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente";
+                // Lê todas as linhas do arquivo de texto que armazena os locatarios
+                string[] locatarios = File.ReadAllLines(locatarioFilePath);
 
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
+                // Procura o locatario pelo CPF
+                foreach (string locatario in locatarios)
+                {
+                    string[] dadosLocatario = locatario.Split(',');
+                    if (dadosLocatario.Length >= 3 && dadosLocatario[0] == cpf)
+                    {
+                        // Retorna os dados do locatario se encontrado
+                        return locatario;
+                    }
                 }
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static DataTable BuscarLocatarioPorID(int id)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try
-            {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente WHERE cliente.ID_CLIENTE = @id";
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static DataTable BuscarLocatarioPorCPF(string cpf)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try
-            {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente WHERE cliente.CPF =@cpf";
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
+                // Retorna null se o locatario não for encontrado
+                return null;
             }
             catch (Exception ex)
             {

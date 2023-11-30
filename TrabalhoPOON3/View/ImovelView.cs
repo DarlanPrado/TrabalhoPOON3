@@ -4,14 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TrabalhoPOON3.Controller;
 using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.View
 {
     public class ImovelView : Tela
     {
-        private LocatarioController locatarioController = new LocatarioController();
+        private ImovelModel imovelController = new ImovelModel();
 
         public void MontarImovelView()
         {
@@ -38,7 +37,7 @@ namespace TrabalhoPOON3.View
                         ListarImoveis();
                         break;
                     case "3":
-                        AlterarImovel();
+                        //AlterarImovel();
                         break;
                     case "0":
                         Console.WriteLine("Saindo da Área do Imóvel.");
@@ -61,17 +60,17 @@ namespace TrabalhoPOON3.View
             CentralizarMensagem(2, 117, 8, " == CPF do Locatario == ");
             string cpfLocatario = Console.ReadLine();
 
-            CentralizarMensagem(2, 117, 10, " == Nome do Locatario == ");
-            string nomeLocatario = Console.ReadLine();
+            CentralizarMensagem(2, 117, 10, " == Tipo do Imovel == ");
+            string tipoImovel = Console.ReadLine();
 
-            CentralizarMensagem(2, 117, 11, " == Telefone do Locatario == ");
-            string telefoneLocatario = Console.ReadLine();
+            CentralizarMensagem(2, 117, 11, " == Valor do Imovel == ");
+            double valorImovel = double.Parse(Console.ReadLine());
 
             // Substitua as informações acima pelos dados específicos do Imóvel
             // ...
             try 
-            { 
-                locatarioController.adicionarLocatario(cpfLocatario, nomeLocatario, telefoneLocatario);
+            {
+                imovelController.AdicionarImovel(cpfLocatario, tipoImovel, valorImovel);
                 Console.WriteLine("Imóvel cadastrado com sucesso.");
             }
             catch(Exception ex)
@@ -82,67 +81,63 @@ namespace TrabalhoPOON3.View
 
         private void ListarImoveis()
         {
+            //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-
             CentralizarMensagem(2, 117, 5, "== Listar Imóveis ==");
+            CentralizarMensagem(2, 117, 10, " == Cpf do Cliente == ");
+            string cpfCliente = Console.ReadLine();
+            //
 
-            DataTable imoveis = locatarioController.ListarLocatario();
+            string resultado = imovelController.ListarImoveisDoCliente(cpfCliente);
 
-            if (imoveis.Rows.Count == 0)
-            {
-                Console.WriteLine("Nenhum imóvel cadastrado.");
-            }
-            else
-            {
-                foreach (System.Data.DataRow row in imoveis.Rows)
-                {
-                    Console.WriteLine($"ID Imóvel: {row["ID_IMOVEL"]}, ID ou CPF do Cliente: {row["ID_OU_CPF_CLIENTE"]}, Tipo: {row["TIPO_IMOVEL"]}, Valor do Aluguel: {row["VALOR_ALUGUEL"]}");
-                }
-            }
+
+            CentralizarMensagem(2, 117, 10, " == Imoveis do Cliente == ");
+            CentralizarMensagem(2, 117, 10, resultado);
+
         }
         //Darlan muda essa parte pra mudar as info de cadastro
-        private void AlterarImovel()
-        {
-            LimparArea(5, 5, 114, 20);
-            Console.SetCursorPosition(5, 5);
+        //private void AlterarImovel()
+        //{
+        //    LimparArea(5, 5, 114, 20);
+        //    Console.SetCursorPosition(5, 5);
 
-            CentralizarMensagem(2, 117, 5, " == Alterar Imóvel == ");
+        //    CentralizarMensagem(2, 117, 5, " == Alterar Imóvel == ");
 
-            CentralizarMensagem(2, 117, 6, " == Digite o ID do Imóvel que deseja alterar == ");
-            string idImovel = Console.ReadLine();
+        //    CentralizarMensagem(2, 117, 6, " == Digite o CPF do Cliente do Imovel que deseja alterar == ");
+        //    string cpfImovel = Console.ReadLine();
 
-            if (int.TryParse(idImovel, out int idImovelInt))
-            {
-                DataTable imovel = ImovelController.BuscarImovelPorID(idImovelInt);
+        //    if (int.TryParse(cpfImovel, out int idImovelInt))
+        //    {
+        //        DataTable imovel = ImovelController.BuscarImovelPorID(idImovelInt);
 
-                if (imovel.Rows.Count > 0)
-                {
-                    CentralizarMensagem(2, 117, 8, " == Novo Valor do Aluguel == ");
-                    string novoValorAluguel = Console.ReadLine();
+        //        if (imovel.Rows.Count > 0)
+        //        {
+        //            CentralizarMensagem(2, 117, 8, " == Novo Valor do Aluguel == ");
+        //            string novoValorAluguel = Console.ReadLine();
 
 
-                    if (double.TryParse(novoValorAluguel, out double novoValorAluguelDouble))
-                    {
-                        //Essa parte
-                        //locatarioController.editarLocatario(idImovelInt, novoValorAluguelDouble);
-                        Console.WriteLine("Valor do aluguel alterado com sucesso.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Valor do Aluguel inválido.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Imóvel não encontrado.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("ID do Imóvel inválido.");
-            }
-        }
+        //            if (double.TryParse(novoValorAluguel, out double novoValorAluguelDouble))
+        //            {
+        //                //Essa parte
+        //                //locatarioController.editarLocatario(idImovelInt, novoValorAluguelDouble);
+        //                Console.WriteLine("Valor do aluguel alterado com sucesso.");
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("Valor do Aluguel inválido.");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("Imóvel não encontrado.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("ID do Imóvel inválido.");
+        //    }
+        //}
     }
 
 }

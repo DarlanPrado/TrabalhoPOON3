@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TrabalhoPOON3.Controller;
+using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.View
 {
     public class LocatarioView : Tela
     {
 
-        private LocatarioController locatarioController = new LocatarioController();
+        private LocatarioModel locatarioController = new LocatarioModel();
 
         public void MontarLocatarioView()
         {
@@ -37,9 +37,6 @@ namespace TrabalhoPOON3.View
                         break;
                     case "2":
                         ListarLocatarios();
-                        break;
-                    case "3":
-                        BuscarLocatarioPorID();
                         break;
                     case "4":
                         BuscarLocatarioPorCPF();
@@ -83,8 +80,9 @@ namespace TrabalhoPOON3.View
 
             try 
             {
-                locatarioController.adicionarLocatario(cpf, nome, telefone);
+                locatarioController.AdicionarLocatario(cpf, nome, telefone);
                 Console.WriteLine("Locatario cadastrado com sucesso.");
+                Console.ReadKey();
             }
             catch(Exception ex)
             {
@@ -94,75 +92,43 @@ namespace TrabalhoPOON3.View
 
         private void ListarLocatarios()
         {
-            //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
             CentralizarMensagem(2, 117, 5, " == Listar Locatario == ");
-            var locatario = locatarioController.ListarLocatario();
-            //
 
+            List<string> locatarios = locatarioController.ListarLocatarios();
 
-            if (locatario.Rows.Count == 0)
+            if (locatarios.Count == 0)
             {
                 Console.WriteLine("Nenhum Locatario cadastrado.");
             }
             else
             {
-                foreach (System.Data.DataRow row in locatario.Rows)
+                foreach (string locatario in locatarios)
                 {
-                    Console.WriteLine($"ID: {row["ID_CLIENTE"]}, CPF: {row["CPF"]}, Nome: {row["NOME"]}, Telefone: {row["TELEFONE"]}");
+                    Console.WriteLine(locatario);
+                    Console.ReadKey();
                 }
-            }
-        }
-
-        private void BuscarLocatarioPorID()
-        {
-            //
-            string id;
-            LimparArea(5, 5, 114, 20);
-            Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, " == Digite o id de Locatario == ");
-            id = Console.ReadLine();
-            //
-
-
-            if (int.TryParse(id, out int numeroInt))
-            {
-                var locatario = locatarioController.BuscarLocatarioPorID(numeroInt); 
-
-                if (locatario.Rows.Count > 0)
-                {
-                    Console.WriteLine($"Locatario encontrado: ID: {locatario.Rows[0]["ID_CLIENTE"]}, CPF: {locatario.Rows[0]["CPF"]}, Nome: {locatario.Rows[0]["NOME"]}, Telefone: {locatario.Rows[0]["TELEFONE"]}");
-                }
-                else
-                {
-                    Console.WriteLine("Locatario não encontrado.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("ID inválido.");
             }
         }
 
         private void BuscarLocatarioPorCPF()
         {
-            //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Digite o CPF de Locatario ==");
+            CentralizarMensagem(2, 117, 5, "== Digite o CPF de Locatario ===");
             string cpf = Console.ReadLine();
-            //
 
-            var locatario = locatarioController.BuscarLocatarioPorCPF(cpf); 
+            var locatario = locatarioController.BuscarLocatarioPorCPF(cpf);
 
-            if (locatario.Rows.Count > 0)
+            if (!string.IsNullOrEmpty(locatario))
             {
-                Console.WriteLine($"Cliente encontrado: ID: {locatario.Rows[0]["ID_CLIENTE"]}, CPF: {locatario.Rows[0]["CPF"]}, Nome: {locatario.Rows[0]["NOME"]}, Telefone: {locatario.Rows[0]["TELEFONE"]}");
+                Console.WriteLine($"Locatario encontrado: {locatario}");
+                Console.ReadKey();
             }
             else
             {
-                Console.WriteLine("Cliente não encontrado.");
+                Console.WriteLine("Locatario não encontrado.");
             }
         }
     }

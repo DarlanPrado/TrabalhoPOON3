@@ -64,9 +64,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Controller\ClienteController.cs" />
-    <Compile Include="Controller\ImovelController.cs" />
-    <Compile Include="Controller\LocatarioController.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Model\AcordoContratoModel.cs" />
     <Compile Include="Model\ClienteModel.cs" />

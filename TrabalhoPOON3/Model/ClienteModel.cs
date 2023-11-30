@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,20 +9,45 @@ namespace TrabalhoPOON3.Model
 {
     public class ClienteModel : Database
     {
+        // Define o caminho do arquivo de texto que armazena os clientes
+        private static string clienteFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\cliente.txt";
 
-        public static void AdicionarCliente(string cpf, string nome, string telefone) 
+        public void AdicionarCliente(string cpf, string nome, string telefone)
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
+                // Cria uma string com os dados do cliente separados por vírgula
+                string cliente = $"{cpf},{nome},{telefone}";
+
+                // Usa o método AppendAllText para adicionar o cliente ao final do arquivo de texto
+                File.AppendAllText(clienteFilePath, cliente + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EditarCliente(int id, string cpf, string nome, string telefone)
+        {
+            try
+            {
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] clientes = File.ReadAllLines(clienteFilePath);
+
+                // Verifica se o id é válido e menor que o tamanho do array
+                if (id > 0 && id <= clientes.Length)
                 {
-                    cmd.CommandText = "INSERT INTO cliente (CPF, NOME, TELEFONE) VALUES (@cpf, @nome, @telefone)";
+                    // Substitui a linha correspondente ao id pelo novo cliente
+                    clientes[id - 1] = $"{cpf},{nome},{telefone}";
 
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
-
-                    cmd.ExecuteNonQuery();
+                    // Escreve o array atualizado no arquivo de texto
+                    File.WriteAllLines(clienteFilePath, clientes);
+                }
+                else
+                {
+                    // Lança uma exceção se o id for inválido
+                    throw new ArgumentException("Id inválido");
                 }
             }
             catch (Exception ex)
@@ -32,21 +56,15 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarCliente(int id, string cpf, string nome, string telefone)
+        public List<string> ListarClientes()
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "UPDATE cliente SET NOME = @nome, TELEFONE = @telefone, CPF = @cpf WHERE ID_CLIENTE = @id";
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] clientes = File.ReadAllLines(clienteFilePath);
 
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-
-                    cmd.ExecuteNonQuery();
-                }
+                // Converte o array de clientes para uma lista e retorna
+                return clientes.ToList();
             }
             catch (Exception ex)
             {
@@ -54,69 +72,28 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static DataTable ListarClientes()
+        public string BuscarClientePorCPF(string cpf)
         {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente";
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] clientes = File.ReadAllLines(clienteFilePath);
 
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
+                // Procura o cliente pelo CPF
+                foreach (string cliente in clientes)
+                {
+                    string[] dadosCliente = cliente.Split(',');
+                    if (dadosCliente.Length >= 3 && dadosCliente[0] == cpf)
+                    {
+                        // Retorna os dados do cliente se encontrado
+                        return cliente;
+                    }
                 }
 
+                // Retorna null se o cliente não for encontrado
+                return null;
             }
             catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static DataTable BuscarClientePorID(int id)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try
-            {
-
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente WHERE cliente.ID_CLIENTE = @id";
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static DataTable BuscarClientePorCPF(string cpf)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try {
-            
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM cliente WHERE cliente.CPF =@cpf";
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
-
-            }catch (Exception ex)
             {
                 throw ex;
             }

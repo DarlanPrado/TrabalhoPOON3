@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using TrabalhoPOON3.Controller;
+using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.View
 {
     public class ClienteView : Tela
     {
 
-        public ClienteController clienteController = new ClienteController();
+        public ClienteModel clienteController = new ClienteModel();
 
         public void MontarClienteView()
         {
@@ -21,10 +21,9 @@ namespace TrabalhoPOON3.View
                 {
                     "1 - Cadastrar Cliente",
                     "2 - Listar Clientes",
-                    "3 - Buscar Cliente por ID",
-                    "4 - Buscar Cliente por CPF",
-                    "5 - Imoveis",
-                    "6 - Editar Locatario",
+                    "3 - Buscar Cliente por CPF",
+                    "4 - Imoveis",
+                    "5 - Editar Locatario",
                     "0 - Sair"
                 }, 5, 5, 6);
 
@@ -37,15 +36,12 @@ namespace TrabalhoPOON3.View
                         ListarClientes();
                         break;
                     case "3":
-                        BuscarClientePorID();
-                        break;
-                    case "4":
                         BuscarClientePorCPF();
                         break;
-                    case "5":
+                    case "4":
                         Imovel(); //TODO
                         break;
-                    case "6":
+                    case "5":
                         EditarCliente();
                         break;
                     case "0":
@@ -90,7 +86,7 @@ namespace TrabalhoPOON3.View
 
             try
             {
-                clienteController.editarCliente(id, cpf, nome, telefone);
+                clienteController.EditarCliente(id, cpf, nome, telefone);
             }
             catch(Exception ex)
             {
@@ -117,12 +113,14 @@ namespace TrabalhoPOON3.View
 
             try
             {
-                clienteController.adicionarCliente(cpf, nome, telefone);
+                clienteController.AdicionarCliente(cpf, nome, telefone);
+                Console.SetCursorPosition(5, 5);
                 Console.WriteLine("Cliente cadastrado com sucesso.");
+                Console.ReadKey();
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex);
             }
         }
 
@@ -132,72 +130,44 @@ namespace TrabalhoPOON3.View
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
             CentralizarMensagem(2, 117, 5, " == Listar Cliente == ");
-            var clientes = clienteController.ListarClientes();
+            List<string> clientes = clienteController.ListarClientes();
             //
 
-
-            if (clientes.Rows.Count == 0)
+            if (clientes.Count == 0)
             {
                 Console.WriteLine("Nenhum cliente cadastrado.");
             }
             else
             {
-                foreach (System.Data.DataRow row in clientes.Rows)
-                {
-                    Console.WriteLine($"ID: {row["ID_CLIENTE"]}, CPF: {row["CPF"]}, Nome: {row["NOME"]}, Telefone: {row["TELEFONE"]}");
-                }
-            }
-        }
-
-        private void BuscarClientePorID()
-        {
-            //
-            string id;
-            LimparArea(5, 5, 114, 20);
-            Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Digite o id de cliente ==");
-            id = Console.ReadLine();
-            //
-
-
-            if (int.TryParse(id, out int numeroInt))
-            {
-                var cliente = clienteController.BuscarClientePorID(numeroInt);
-
-                if (cliente.Rows.Count > 0)
-                {
-                    Console.WriteLine($"Cliente encontrado: ID: {cliente.Rows[0]["ID_CLIENTE"]}, CPF: {cliente.Rows[0]["CPF"]}, Nome: {cliente.Rows[0]["NOME"]}, Telefone: {cliente.Rows[0]["TELEFONE"]}");
-                }
-                else
-                {
-                    Console.WriteLine("Cliente não encontrado.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("ID inválido.");
+                string clientesString = string.Join(Environment.NewLine, clientes);
+                LimparArea(5, 5, 114, 20);
+                Console.SetCursorPosition(5, 5);
+                Console.WriteLine(clientesString);
+                Console.ReadKey();
             }
         }
 
         private void BuscarClientePorCPF()
         {
-            //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
             CentralizarMensagem(2, 117, 5, "== Digite o CPF de cliente ==");
-            string cpf = Console.ReadLine();
-            //
 
+            string cpf = Console.ReadLine();
             var cliente = clienteController.BuscarClientePorCPF(cpf);
 
-            if (cliente.Rows.Count > 0)
+            if (!string.IsNullOrEmpty(cliente))
             {
-                Console.WriteLine($"Cliente encontrado: ID: {cliente.Rows[0]["ID_CLIENTE"]}, CPF: {cliente.Rows[0]["CPF"]}, Nome: {cliente.Rows[0]["NOME"]}, Telefone: {cliente.Rows[0]["TELEFONE"]}");
+                LimparArea(5, 5, 114, 20);
+                Console.SetCursorPosition(5, 5);
+                Console.WriteLine($"Cliente encontrado: {cliente}");
+                Console.ReadKey();
             }
             else
             {
                 Console.WriteLine("Cliente não encontrado.");
             }
         }
+
     }
 }

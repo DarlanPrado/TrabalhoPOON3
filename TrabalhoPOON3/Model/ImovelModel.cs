@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,23 +9,26 @@ namespace TrabalhoPOON3.Model
 {
     internal class ImovelModel : Database
     {
-        public static void AdicionarImovel(string idCliente,string TipoImovel, double valor, bool disponivel)
+        // Define o caminho do arquivo de texto que armazena os imoveis
+        private static string imovelFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\imovel.txt";
+
+        // Define o caminho do arquivo de texto que armazena a relação entre clientes e imoveis
+        private static string clienteImovelFilePath = "cliente_imovel.txt";
+
+        public void AdicionarImovel(string cpfCliente, string TipoImovel, double valor)
         {
             int idImovel = 0;
 
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "INSERT INTO cliente (TIPO_IMOVEL, VALOR, BL_DISPONIVEL) VALUES (@tipoImovel, @valor, @disponivel);" +
-                                      "SELECT SCOPE_IDENTITY();";
+                // Cria uma string com os dados do imovel separados por vírgula
+                string imovel = $"{TipoImovel},{valor}";
 
-                    cmd.Parameters.AddWithValue("@tipoImovel", TipoImovel);
-                    cmd.Parameters.AddWithValue("@valor", valor);
-                    cmd.Parameters.AddWithValue("@disponivel", disponivel ? 1 : 0);
+                // Usa o método AppendAllText para adicionar o imovel ao final do arquivo de texto
+                File.AppendAllText(imovelFilePath, imovel + Environment.NewLine);
 
-                    idImovel = Convert.ToInt32(cmd.ExecuteScalar());
-                }
+                // Obtém o número de linhas do arquivo de texto, que corresponde ao id do imovel
+                idImovel = File.ReadAllLines(imovelFilePath).Length;
             }
             catch (Exception ex)
             {
@@ -35,15 +37,11 @@ namespace TrabalhoPOON3.Model
 
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "INSERT INTO cliente_imovel (ID_CLIENTE, ID_IMOVEL, BL_PROPIETARIO_ATUAL) VALUES (@idCliente, @idImovel, @propietarioAtual);";
+                // Cria uma string com os dados da relação entre cliente e imovel separados por vírgula
+                string clienteImovel = $"{cpfCliente},{idImovel},1";
 
-                    cmd.Parameters.AddWithValue("@idCliente", idCliente);
-                    cmd.Parameters.AddWithValue("@idImovel", idImovel);
-                    cmd.Parameters.AddWithValue("@propietarioAtual", 1);
-
-                }
+                // Usa o método AppendAllText para adicionar a relação ao final do arquivo de texto
+                File.AppendAllText(clienteImovelFilePath, clienteImovel + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -52,17 +50,42 @@ namespace TrabalhoPOON3.Model
 
         }
 
-        public static void AdicionarImovelAoCliente(string idImovel, string idCliente)
+        public void AdicionarImovelAoCliente(string idImovel, string idCliente)
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "INSERT INTO cliente_imovel (ID_CLIENTE, ID_IMOVEL, BL_PROPIETARIO_ATUAL) VALUES (@idCliente, @idImovel, @propietarioAtual);";
+                // Cria uma string com os dados da relação entre cliente e imovel separados por vírgula
+                string clienteImovel = $"{idCliente},{idImovel},1";
 
-                    cmd.Parameters.AddWithValue("@idCliente", idCliente);
-                    cmd.Parameters.AddWithValue("@idImovel", idImovel);
-                    cmd.Parameters.AddWithValue("@propietarioAtual", 1);
+                // Usa o método AppendAllText para adicionar a relação ao final do arquivo de texto
+                File.AppendAllText(clienteImovelFilePath, clienteImovel + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EditarImovel(string idImovel, string TipoImovel, double valor, bool disponivel)
+        {
+            try
+            {
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] imoveis = File.ReadAllLines(imovelFilePath);
+
+                // Verifica se o id é válido e menor que o tamanho do array
+                if (int.TryParse(idImovel, out int id) && id > 0 && id <= imoveis.Length)
+                {
+                    // Substitui a linha correspondente ao id pelo novo imovel
+                    imoveis[id - 1] = $"{TipoImovel},{valor},{disponivel}";
+
+                    // Escreve o array atualizado no arquivo de texto
+                    File.WriteAllLines(imovelFilePath, imoveis);
+                }
+                else
+                {
+                    // Lança uma exceção se o id for inválido
+                    throw new ArgumentException("Id inválido");
                 }
             }
             catch (Exception ex)
@@ -71,71 +94,38 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarImovel(string idImovel,string TipoImovel, double valor, bool disponivel)
+        public string ListarImoveisDoCliente(string cpfCliente)
         {
             try
             {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "UPDATE imovel SET TIPO_IMOVEL = @tipoImovel, VALOR = @valor, BL_DISPONIVEL = @disponivel WHERE ID_IMOVEL = @idImovel";
+                // Lê todas as linhas do arquivo de texto que armazena a relação entre clientes e imoveis
+                string[] clienteImoveis = File.ReadAllLines(clienteImovelFilePath);
 
-                    cmd.Parameters.AddWithValue("@idImovel", idImovel);
-                    cmd.Parameters.AddWithValue("@tipoImovel", TipoImovel);
-                    cmd.Parameters.AddWithValue("@valor", valor);
-                    cmd.Parameters.AddWithValue("@disponivel", disponivel ? 1 : 0);
+                // Filtra as entradas relacionadas ao cliente fornecido
+                var imoveisDoCliente = clienteImoveis
+                    .Where(line => line.Split(',')[0] == cpfCliente)
+                    .Select(line => line.Split(',')[1]) // Pega o id do imovel
+                    .ToList();
 
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+                // Lê todas as linhas do arquivo de texto que armazena os imoveis
+                string[] imoveis = File.ReadAllLines(imovelFilePath);
 
-        public static DataTable ListarImoveisDoCiente(string idCLiente)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try
-            {
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT imovel.* FROM imovel"+
-                        "LEFT JOIN cliente_imovel ON cliente_imovel.ID_IMOVEL = imovel.ID_IMOVEL" +
-                        "WHERE cliente_imovel.ID_CLIENTE = @idCLiente";
+                // Filtra os dados dos imoveis do cliente
+                var dadosImoveisDoCliente = imoveisDoCliente
+                    .Select(idImovel =>
+                    {
+                        if (int.TryParse(idImovel, out int id) && id > 0 && id <= imoveis.Length)
+                        {
+                            return imoveis[id - 1];
+                        }
+                        return null;
+                    })
+                    .Where(dadosImovel => dadosImovel != null)
+                    .ToList();
+                string dadosImoveisString = string.Join(Environment.NewLine, dadosImoveisDoCliente);
 
-                    cmd.Parameters.AddWithValue("@idCLiente", idCLiente);
 
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static DataTable BuscarImovelPorID(int idImovel)
-        {
-            SQLiteDataAdapter da = null;
-            DataTable dt = new DataTable();
-            try
-            {
-
-                using (var cmd = conn().CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM imovel WHERE imovel.ID_IMOVEL = @idImovel";
-                    cmd.Parameters.AddWithValue("@idImovel", idImovel);
-
-                    da = new SQLiteDataAdapter(cmd.CommandText, conn());
-                    da.Fill(dt);
-                    return dt;
-                }
-
+                return dadosImoveisString;
             }
             catch (Exception ex)
             {
