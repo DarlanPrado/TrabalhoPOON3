@@ -9,20 +9,19 @@ using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.View
 {
-    public class ImovelView
+    public class ImovelView : Tela
     {
-        private Tela telaImovelView = new Tela();
         private LocatarioController locatarioController = new LocatarioController();
 
         public void MontarImovelView()
         {
-            telaImovelView.ConfigurarTela();
+            ConfigurarTela();
             string escolha;
 
             do
             {
-                telaImovelView.MontarTelaSistema(2, 2, 119 - 2, 24 - 2, 4, "Área do Imóvel");
-                escolha = telaImovelView.MostrarMenu(new List<string>
+                MontarTelaSistema(2, 2, 119 - 2, 24 - 2, 4, "Área do Imóvel");
+                escolha = MostrarMenu(new List<string>
             {
                 "1 - Cadastrar Imóvel",
                 "2 - Listar Imóveis",
@@ -54,18 +53,18 @@ namespace TrabalhoPOON3.View
 
         private void CadastrarImovel()
         {
-            telaImovelView.LimparArea(5, 5, 114, 20);
+            LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
 
-            telaImovelView.CentralizarMensagem(2, 117, 5, " == Cadastrar Imóvel == ");
+           CentralizarMensagem(2, 117, 5, " == Cadastrar Imóvel == ");
 
-            telaImovelView.CentralizarMensagem(2, 117, 8, " == CPF do Locatario == ");
+            CentralizarMensagem(2, 117, 8, " == CPF do Locatario == ");
             string cpfLocatario = Console.ReadLine();
 
-            telaImovelView.CentralizarMensagem(2, 117, 10, " == Nome do Locatario == ");
+                        CentralizarMensagem(2, 117, 10, " == Nome do Locatario == ");
             string nomeLocatario = Console.ReadLine();
 
-            telaImovelView.CentralizarMensagem(2, 117, 11, " == Telefone do Locatario == ");
+            CentralizarMensagem(2, 117, 11, " == Telefone do Locatario == ");
             string telefoneLocatario = Console.ReadLine();
 
             // Substitua as informações acima pelos dados específicos do Imóvel
@@ -77,10 +76,10 @@ namespace TrabalhoPOON3.View
 
         private void ListarImoveis()
         {
-            telaImovelView.LimparArea(5, 5, 114, 20);
+            LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
 
-            telaImovelView.CentralizarMensagem(2, 117, 5, "== Listar Imóveis ==");
+            CentralizarMensagem(2, 117, 5, "== Listar Imóveis ==");
 
             DataTable imoveis = locatarioController.listLocatario();
 
@@ -99,12 +98,12 @@ namespace TrabalhoPOON3.View
         //Darlan muda essa parte pra mudar as info de cadastro
         private void AlterarImovel()
         {
-            telaImovelView.LimparArea(5, 5, 114, 20);
+            LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
 
-            telaImovelView.CentralizarMensagem(2, 117, 5, " == Alterar Imóvel == ");
+            CentralizarMensagem(2, 117, 5, " == Alterar Imóvel == ");
 
-            telaImovelView.CentralizarMensagem(2, 117, 6, " == Digite o ID do Imóvel que deseja alterar == ");
+            CentralizarMensagem(2, 117, 6, " == Digite o ID do Imóvel que deseja alterar == ");
             string idImovel = Console.ReadLine();
 
             if (int.TryParse(idImovel, out int idImovelInt))
@@ -113,7 +112,7 @@ namespace TrabalhoPOON3.View
 
                 if (imovel.Rows.Count > 0)
                 {
-                    telaImovelView.CentralizarMensagem(2, 117, 8, " == Novo Valor do Aluguel == ");
+                    CentralizarMensagem(2, 117, 8, " == Novo Valor do Aluguel == ");
                     string novoValorAluguel = Console.ReadLine();
 
 

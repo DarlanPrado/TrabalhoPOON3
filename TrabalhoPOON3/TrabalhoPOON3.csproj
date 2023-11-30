@@ -69,6 +69,8 @@
     <Compile Include="Database.cs" />
     <Compile Include="Model\BoletoModel.cs" />
     <Compile Include="Model\ClienteModel.cs" />
+    <Compile Include="Model\ContratoModel.cs" />
+    <Compile Include="Model\ImovelModel.cs" />
     <Compile Include="Model\LocatarioModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\ClienteView.cs" />

@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TrabalhoPOON3.Model
 {
-    public class LocatarioModel : Database
+    internal class ImovelModel : Database
     {
-        public static void AdicionarLocatario(string cpf, string nome, string telefone)
+        public static void AdicionarImovel(string TipoImovel, double valor, bool disponivel)
         {
             try
             {
                 using (var cmd = conn().CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO cliente (CPF, NOME, TELEFONE) VALUES (@cpf, @nome, @telefone)";
+                    cmd.CommandText = "INSERT INTO cliente (TIPO_IMOVEL, VALOR, BL_DISPONIVEL) VALUES (@tipoImovel, @nome, @disponivel)";
 
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
+                    cmd.Parameters.AddWithValue("@tipoImovel", TipoImovel);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+                    cmd.Parameters.AddWithValue("@disponivel", disponivel ? 1 : 0);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -31,7 +31,7 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarLocatario(int id, string cpf, string nome, string telefone)
+        public static void EditarImovel(string TipoImovel, double valor, bool disponivel)
         {
             try
             {
@@ -39,10 +39,9 @@ namespace TrabalhoPOON3.Model
                 {
                     cmd.CommandText = "UPDATE cliente SET NOME = @nome, TELEFONE = @telefone, CPF = @cpf WHERE ID_CLIENTE = @id";
 
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@telefone", telefone);
-                    cmd.Parameters.AddWithValue("@cpf", cpf);
+                    cmd.Parameters.AddWithValue("@tipoImovel", TipoImovel);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+                    cmd.Parameters.AddWithValue("@disponivel", disponivel ? 1 : 0);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -81,6 +80,7 @@ namespace TrabalhoPOON3.Model
             DataTable dt = new DataTable();
             try
             {
+
                 using (var cmd = conn().CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM cliente WHERE cliente.ID_CLIENTE = @id";
@@ -104,6 +104,7 @@ namespace TrabalhoPOON3.Model
             DataTable dt = new DataTable();
             try
             {
+
                 using (var cmd = conn().CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM cliente WHERE cliente.CPF =@cpf";
@@ -113,6 +114,7 @@ namespace TrabalhoPOON3.Model
                     da.Fill(dt);
                     return dt;
                 }
+
             }
             catch (Exception ex)
             {
