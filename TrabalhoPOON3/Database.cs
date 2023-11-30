@@ -14,7 +14,8 @@ namespace TrabalhoPOON3
 
         protected static SQLiteConnection conn()
         {
-            conect = new SQLiteConnection("Data Source= C:\\Users\\vinicius.zanatta\\source\\repos\\TrabalhoPOON3\\DataBase");
+            string diretorioDoApp = AppDomain.CurrentDomain.BaseDirectory;
+            conect = new SQLiteConnection($"Data Source={diretorioDoApp}\\DataBase\\db_trabalho_poo_n3.db");
             conect.Open();
             return conect;
         }

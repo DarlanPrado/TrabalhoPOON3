@@ -10,9 +10,9 @@ namespace TrabalhoPOON3.Controller
 {
     public class LocatarioController
     {
-        public void adicionarLocatario(string cpf, string nome, string telefone)
+        public void adicionarLocatario(string cpfLocatario, string nome, string telefone)
         {
-            string cpfTratado = cpf.Replace(" ", "").Replace(".", "").Replace("-", "");
+            string cpfTratado = cpfLocatario.Replace(" ", "").Replace(".", "").Replace("-", "");
             string telefoneTratado = telefone.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
 
             if (cpfTratado.Length != 11)
@@ -34,7 +34,7 @@ namespace TrabalhoPOON3.Controller
         }
 
         
-        public void editarLocatario(int id, string cpf, string nome, string telefone)
+        public void editarLocatario(int idLocatario, string cpf, string nome, string telefone)
         {
             string cpfTratado = cpf.Replace(" ", "").Replace(".", "").Replace("-", "");
             string telefoneTratado = telefone.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
@@ -54,22 +54,22 @@ namespace TrabalhoPOON3.Controller
                 throw new Exception("Já existe um cliente com este CPF");
             }
 
-            ClienteModel.EditarCliente(id, cpfTratado, nome, telefoneTratado);
+            ClienteModel.EditarCliente(idLocatario, cpfTratado, nome, telefoneTratado);
         }
 
-        public DataTable listLocatario()
+        public DataTable ListarClientes()
         {
             return ClienteModel.ListarClientes();
         }
 
-        public DataTable getInfosLocatario(int idCliente)
+        public DataTable BuscarClientePorID(int idCliente)
         {
             return ClienteModel.BuscarClientePorID(idCliente);
         }
 
-        public DataTable getInfosLocatario(string cpf)
+        public DataTable BuscarClientePorCPF(string cpfLocatario)
         {
-            string cpfTratado = cpf.Replace(" ", "").Replace(".", "").Replace("-", "");
+            string cpfTratado = cpfLocatario.Replace(" ", "").Replace(".", "").Replace("-", "");
             return ClienteModel.BuscarClientePorCPF(cpfTratado);
         }
     }

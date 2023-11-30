@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TrabalhoPOON3.Model
 {
-    internal class ContratoModel
+    public class ContratoModel : Database
     {
+
     }
 }
