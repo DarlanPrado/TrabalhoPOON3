@@ -56,17 +56,17 @@ namespace TrabalhoPOON3.Controller
             ClienteModel.EditarCliente(id, cpfTratado, nome, telefoneTratado);
         }
 
-        public DataTable listClientes()
+        public DataTable ListarClientes()
         {
             return ClienteModel.ListarClientes();
         }
 
-        public DataTable getInfosCliente(int idCliente)
+        public DataTable BuscarClientePorID(int idCliente)
         {
             return ClienteModel.BuscarClientePorID(idCliente);
         }
 
-        public DataTable getInfosCliente(string cpf)
+        public DataTable BuscarClientePorCPF(string cpf)
         {
             string cpfTratado = cpf.Replace(" ", "").Replace(".", "").Replace("-", "");
             return ClienteModel.BuscarClientePorCPF(cpfTratado);
