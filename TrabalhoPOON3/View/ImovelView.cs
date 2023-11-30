@@ -26,7 +26,7 @@ namespace TrabalhoPOON3.View
                 "1 - Cadastrar Imóvel",
                 "2 - Listar Imóveis",
                 "3 - Alterar Imóvel",
-                "0 - Sair"
+                "0 - Sair",
             }, 5, 5, 6);
 
                 switch (escolha)
@@ -56,12 +56,12 @@ namespace TrabalhoPOON3.View
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
 
-           CentralizarMensagem(2, 117, 5, " == Cadastrar Imóvel == ");
+            CentralizarMensagem(2, 117, 5, " == Cadastrar Imóvel == ");
 
             CentralizarMensagem(2, 117, 8, " == CPF do Locatario == ");
             string cpfLocatario = Console.ReadLine();
 
-                        CentralizarMensagem(2, 117, 10, " == Nome do Locatario == ");
+            CentralizarMensagem(2, 117, 10, " == Nome do Locatario == ");
             string nomeLocatario = Console.ReadLine();
 
             CentralizarMensagem(2, 117, 11, " == Telefone do Locatario == ");
@@ -69,9 +69,15 @@ namespace TrabalhoPOON3.View
 
             // Substitua as informações acima pelos dados específicos do Imóvel
             // ...
-
-            locatarioController.adicionarLocatario(cpfLocatario, nomeLocatario, telefoneLocatario);
-            Console.WriteLine("Imóvel cadastrado com sucesso.");
+            try 
+            { 
+                locatarioController.adicionarLocatario(cpfLocatario, nomeLocatario, telefoneLocatario);
+                Console.WriteLine("Imóvel cadastrado com sucesso.");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private void ListarImoveis()
@@ -108,7 +114,7 @@ namespace TrabalhoPOON3.View
 
             if (int.TryParse(idImovel, out int idImovelInt))
             {
-                DataTable imovel = locatarioController.getInfosLocatario(idImovelInt);
+                DataTable imovel = ImovelController.getInfosLocatario(idImovelInt);
 
                 if (imovel.Rows.Count > 0)
                 {
