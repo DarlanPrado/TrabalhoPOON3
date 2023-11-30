@@ -87,7 +87,7 @@ namespace TrabalhoPOON3.View
 
             CentralizarMensagem(2, 117, 5, "== Listar Imóveis ==");
 
-            DataTable imoveis = locatarioController.listLocatario();
+            DataTable imoveis = locatarioController.ListarLocatario();
 
             if (imoveis.Rows.Count == 0)
             {
@@ -114,7 +114,7 @@ namespace TrabalhoPOON3.View
 
             if (int.TryParse(idImovel, out int idImovelInt))
             {
-                DataTable imovel = ImovelController.getInfosLocatario(idImovelInt);
+                DataTable imovel = ImovelController.BuscarImovelPorID(idImovelInt);
 
                 if (imovel.Rows.Count > 0)
                 {
@@ -125,7 +125,7 @@ namespace TrabalhoPOON3.View
                     if (double.TryParse(novoValorAluguel, out double novoValorAluguelDouble))
                     {
                         //Essa parte
-                        locatarioController.editarLocatario(idImovelInt, novoValorAluguelDouble);
+                        //locatarioController.editarLocatario(idImovelInt, novoValorAluguelDouble);
                         Console.WriteLine("Valor do aluguel alterado com sucesso.");
                     }
                     else

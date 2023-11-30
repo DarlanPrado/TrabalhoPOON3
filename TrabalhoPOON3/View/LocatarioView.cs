@@ -10,6 +10,8 @@ namespace TrabalhoPOON3.View
     public class LocatarioView : Tela
     {
 
+        private LocatarioController locatarioController = new LocatarioController();
+
         public void MontarLocatarioView()
         {
             ConfigurarTela();
@@ -46,7 +48,7 @@ namespace TrabalhoPOON3.View
                         EditarLocatario(); //TODO Editar Locatario
                         break;
                     case "0":
-                        Console.WriteLine("Saindo da Área do Cliente.");
+                        Console.WriteLine("Saindo da Área do Locatario.");
                         break;
                     default:
                         Console.WriteLine("Opção inválida. Tente novamente.");
@@ -79,9 +81,15 @@ namespace TrabalhoPOON3.View
             CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
             string telefone = Console.ReadLine();
 
-            LocatarioController.adicionarLocatario(cpf, nome, telefone);
-
-            Console.WriteLine("Cliente cadastrado com sucesso.");
+            try 
+            {
+                locatarioController.adicionarLocatario(cpf, nome, telefone);
+                Console.WriteLine("Locatario cadastrado com sucesso.");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private void ListarLocatarios()
@@ -89,18 +97,18 @@ namespace TrabalhoPOON3.View
             //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, " == Listar Cliente == ");
-            var clientes = LocatarioController.listLocatario();
+            CentralizarMensagem(2, 117, 5, " == Listar Locatario == ");
+            var locatario = locatarioController.ListarLocatario();
             //
 
 
-            if (clientes.Rows.Count == 0)
+            if (locatario.Rows.Count == 0)
             {
-                Console.WriteLine("Nenhum cliente cadastrado.");
+                Console.WriteLine("Nenhum Locatario cadastrado.");
             }
             else
             {
-                foreach (System.Data.DataRow row in clientes.Rows)
+                foreach (System.Data.DataRow row in locatario.Rows)
                 {
                     Console.WriteLine($"ID: {row["ID_CLIENTE"]}, CPF: {row["CPF"]}, Nome: {row["NOME"]}, Telefone: {row["TELEFONE"]}");
                 }
@@ -113,22 +121,22 @@ namespace TrabalhoPOON3.View
             string id;
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, " == Digite o id de cliente == ");
+            CentralizarMensagem(2, 117, 5, " == Digite o id de Locatario == ");
             id = Console.ReadLine();
             //
 
 
             if (int.TryParse(id, out int numeroInt))
             {
-                var cliente = LocatarioController.BuscarClientePorID(numeroInt); //TODO LocatarioController.BuscarLocatarioPorID
+                var locatario = locatarioController.BuscarLocatarioPorID(numeroInt); 
 
-                if (cliente.Rows.Count > 0)
+                if (locatario.Rows.Count > 0)
                 {
-                    Console.WriteLine($"Cliente encontrado: ID: {cliente.Rows[0]["ID_CLIENTE"]}, CPF: {cliente.Rows[0]["CPF"]}, Nome: {cliente.Rows[0]["NOME"]}, Telefone: {cliente.Rows[0]["TELEFONE"]}");
+                    Console.WriteLine($"Locatario encontrado: ID: {locatario.Rows[0]["ID_CLIENTE"]}, CPF: {locatario.Rows[0]["CPF"]}, Nome: {locatario.Rows[0]["NOME"]}, Telefone: {locatario.Rows[0]["TELEFONE"]}");
                 }
                 else
                 {
-                    Console.WriteLine("Cliente não encontrado.");
+                    Console.WriteLine("Locatario não encontrado.");
                 }
             }
             else
@@ -142,15 +150,15 @@ namespace TrabalhoPOON3.View
             //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Digite o CPF de cliente ==");
+            CentralizarMensagem(2, 117, 5, "== Digite o CPF de Locatario ==");
             string cpf = Console.ReadLine();
             //
 
-            var cliente = ClienteModel.BuscarClientePorCPF(cpf); //TODO LocatarioController.BuscarLocatarioPorCPF
+            var locatario = locatarioController.BuscarLocatarioPorCPF(cpf); 
 
-            if (cliente.Rows.Count > 0)
+            if (locatario.Rows.Count > 0)
             {
-                Console.WriteLine($"Cliente encontrado: ID: {cliente.Rows[0]["ID_CLIENTE"]}, CPF: {cliente.Rows[0]["CPF"]}, Nome: {cliente.Rows[0]["NOME"]}, Telefone: {cliente.Rows[0]["TELEFONE"]}");
+                Console.WriteLine($"Cliente encontrado: ID: {locatario.Rows[0]["ID_CLIENTE"]}, CPF: {locatario.Rows[0]["CPF"]}, Nome: {locatario.Rows[0]["NOME"]}, Telefone: {locatario.Rows[0]["TELEFONE"]}");
             }
             else
             {

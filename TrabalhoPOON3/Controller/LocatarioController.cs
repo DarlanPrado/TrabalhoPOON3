@@ -24,13 +24,13 @@ namespace TrabalhoPOON3.Controller
                 throw new Exception("Numero de telefone invalido");
             }
 
-            DataTable existeCpf = ClienteModel.BuscarClientePorCPF(cpfTratado);
+            DataTable existeCpf = LocatarioModel.BuscarLocatarioPorCPF(cpfTratado);
             if (existeCpf != null && existeCpf.Rows.Count > 0)
             {
-                throw new Exception("Já existe um cliente com este CPF");
+                throw new Exception("Já existe um Locatario com este CPF");
             }
 
-            ClienteModel.AdicionarCliente(cpfTratado, nome, telefoneTratado);
+            LocatarioModel.AdicionarLocatario(cpfTratado, nome, telefoneTratado);
         }
 
         
@@ -48,29 +48,29 @@ namespace TrabalhoPOON3.Controller
                 throw new Exception("Numero de telefone invalido");
             }
 
-            DataTable existeCpf = ClienteModel.BuscarClientePorCPF(cpfTratado);
+            DataTable existeCpf = LocatarioModel.BuscarLocatarioPorCPF(cpfTratado);
             if (existeCpf != null && existeCpf.Rows.Count > 0)
             {
-                throw new Exception("Já existe um cliente com este CPF");
+                throw new Exception("Já existe um Locatario com este CPF");
             }
 
-            ClienteModel.EditarCliente(idLocatario, cpfTratado, nome, telefoneTratado);
+            LocatarioModel.EditarLocatario(idLocatario, cpfTratado, nome, telefoneTratado);
         }
 
-        public DataTable ListarClientes()
+        public DataTable ListarLocatario()
         {
-            return ClienteModel.ListarClientes();
+            return LocatarioModel.ListarLocatarios();
         }
 
-        public DataTable BuscarClientePorID(int idCliente)
+        public DataTable BuscarLocatarioPorID(int idLocatario)
         {
-            return ClienteModel.BuscarClientePorID(idCliente);
+            return  LocatarioModel.BuscarLocatarioPorID(idLocatario);
         }
 
-        public DataTable BuscarClientePorCPF(string cpfLocatario)
+        public DataTable BuscarLocatarioPorCPF(string cpfLocatario)
         {
             string cpfTratado = cpfLocatario.Replace(" ", "").Replace(".", "").Replace("-", "");
-            return ClienteModel.BuscarClientePorCPF(cpfTratado);
+            return LocatarioModel.BuscarLocatarioPorCPF(cpfTratado);
         }
     }
 }

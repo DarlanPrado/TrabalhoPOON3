@@ -59,6 +59,11 @@ namespace TrabalhoPOON3.View
             } while (escolha != "0");
         }
 
+        private void Imovel()
+        {
+
+        }
+
 
         private void EditarCliente()
         {
@@ -69,6 +74,7 @@ namespace TrabalhoPOON3.View
 
             CentralizarMensagem(2, 117, 5, " == Editar Informações do Cliente == ");
 
+
             CentralizarMensagem(2, 117, 6, " == CPF == ");
             string cpf = Console.ReadLine();
 
@@ -78,10 +84,18 @@ namespace TrabalhoPOON3.View
             CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
             string telefone = Console.ReadLine();
 
+            CentralizarMensagem(2, 117, 12, " == ID == ");
+            int id =int.Parse(Console.ReadLine());
 
-            //clienteController.editarClienteController(); TDDO clienteController.editarClienteController()
 
-
+            try
+            {
+                clienteController.editarCliente(id, cpf, nome, telefone);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
         private void CadastrarCliente()
         {
@@ -90,20 +104,26 @@ namespace TrabalhoPOON3.View
             Console.SetCursorPosition(5, 5);
             //
 
-            CentralizarMensagem(2, 117, 5, "== Cadastrar Usuario ==");
+            CentralizarMensagem(2, 117, 5, " == Cadastrar Usuario == ");
 
-            CentralizarMensagem(2, 117, 6, "== CPF ==");
+            CentralizarMensagem(2, 117, 6, " == CPF == ");
             string cpf = Console.ReadLine();
 
-            CentralizarMensagem(2, 117, 8, "== NOME ==");
+            CentralizarMensagem(2, 117, 8, " == NOME == ");
             string nome = Console.ReadLine();
 
-            CentralizarMensagem(2, 117, 10, "== TELEFONE ==");
+            CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
             string telefone = Console.ReadLine();
 
-            clienteController.adicionarCliente(cpf, nome, telefone);
-
-            Console.WriteLine("Cliente cadastrado com sucesso.");
+            try
+            {
+                clienteController.adicionarCliente(cpf, nome, telefone);
+                Console.WriteLine("Cliente cadastrado com sucesso.");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void ListarClientes()
@@ -111,7 +131,7 @@ namespace TrabalhoPOON3.View
             //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Listar Cliente ==");
+            CentralizarMensagem(2, 117, 5, " == Listar Cliente == ");
             var clientes = clienteController.ListarClientes();
             //
 
