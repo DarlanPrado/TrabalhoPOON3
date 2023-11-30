@@ -74,6 +74,7 @@
     <Compile Include="Model\LocatarioModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\ClienteView.cs" />
+    <Compile Include="View\ContratoView.cs" />
     <Compile Include="View\ImovelView.cs" />
     <Compile Include="View\LocatarioView.cs" />
     <Compile Include="View\Tela.cs" />
