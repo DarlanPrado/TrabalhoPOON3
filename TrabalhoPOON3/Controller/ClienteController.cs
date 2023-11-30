@@ -8,7 +8,7 @@ using TrabalhoPOON3.Model;
 
 namespace TrabalhoPOON3.Controller
 {
-    internal class ClienteController
+    public class ClienteController
     {
 
         public void adicionarCliente(string cpf, string nome, string telefone)

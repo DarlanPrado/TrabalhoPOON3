@@ -1,52 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TrabalhoPOON3.Controller;
 
 namespace TrabalhoPOON3.View
 {
-    public class ClienteView : Tela
+    public class LocatarioView : Tela
     {
 
-        public ClienteController clienteController = new ClienteController();
-
-        public void MontarClienteView()
+        public void MontarLocatarioView()
         {
             ConfigurarTela();
             string escolha;
 
             do
             {
-                MontarTelaSistema(2, 2, 119 - 2, 24 - 2, 4, "Área do Cliente");
+                MontarTelaSistema(2, 2, 119 - 2, 24 - 2, 4, "Área do Locatario");
                 escolha = MostrarMenu(new List<string>
                 {
-                    "1 - Cadastrar Cliente",
-                    "2 - Listar Clientes",
-                    "3 - Buscar Cliente por ID",
-                    "4 - Buscar Cliente por CPF",
-                    "5 - Imoveis",
-                    "6 - Editar Locatario",
+                    "1 - Cadastrar Locatario",
+                    "2 - Listar Locatario",
+                    "3 - Buscar Locatario por ID",
+                    "4 - Buscar Locatario por CPF",
+                    "5 - Editar Locatario",
                     "0 - Sair"
                 }, 5, 5, 6);
 
                 switch (escolha)
                 {
                     case "1":
-                        CadastrarCliente();
+                        CadastrarLocatario();
                         break;
                     case "2":
-                        ListarClientes();
+                        ListarLocatarios();
                         break;
                     case "3":
-                        BuscarClientePorID();
+                        BuscarLocatarioPorID();
                         break;
                     case "4":
-                        BuscarClientePorCPF();
+                        BuscarLocatarioPorCPF();
                         break;
                     case "5":
-                        Imovel(); //TODO
-                        break;
-                    case "6":
-                        EditarCliente();
+                        EditarLocatario(); //TODO Editar Locatario
                         break;
                     case "0":
                         Console.WriteLine("Saindo da Área do Cliente.");
@@ -59,15 +56,19 @@ namespace TrabalhoPOON3.View
             } while (escolha != "0");
         }
 
+        private void EditarLocatario()
+        {
 
-        private void EditarCliente()
+        }
+
+        private void CadastrarLocatario()
         {
             //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
             //
 
-            CentralizarMensagem(2, 117, 5, " == Editar Informações do Cliente == ");
+            CentralizarMensagem(2, 117, 5, " == Cadastrar Locatario == ");
 
             CentralizarMensagem(2, 117, 6, " == CPF == ");
             string cpf = Console.ReadLine();
@@ -78,41 +79,18 @@ namespace TrabalhoPOON3.View
             CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
             string telefone = Console.ReadLine();
 
-
-            //clienteController.editarClienteController(); TDDO clienteController.editarClienteController()
-
-
-        }
-        private void CadastrarCliente()
-        {
-            //
-            LimparArea(5, 5, 114, 20);
-            Console.SetCursorPosition(5, 5);
-            //
-
-            CentralizarMensagem(2, 117, 5, "== Cadastrar Usuario ==");
-
-            CentralizarMensagem(2, 117, 6, "== CPF ==");
-            string cpf = Console.ReadLine();
-
-            CentralizarMensagem(2, 117, 8, "== NOME ==");
-            string nome = Console.ReadLine();
-
-            CentralizarMensagem(2, 117, 10, "== TELEFONE ==");
-            string telefone = Console.ReadLine();
-
-            clienteController.adicionarCliente(cpf, nome, telefone);
+            LocatarioController.adicionarLocatario(cpf, nome, telefone);
 
             Console.WriteLine("Cliente cadastrado com sucesso.");
         }
 
-        private void ListarClientes()
+        private void ListarLocatarios()
         {
             //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Listar Cliente ==");
-            var clientes = clienteController.listClientes();
+            CentralizarMensagem(2, 117, 5, " == Listar Cliente == ");
+            var clientes = LocatarioController.listLocatario();
             //
 
 
@@ -129,20 +107,20 @@ namespace TrabalhoPOON3.View
             }
         }
 
-        private void BuscarClientePorID()
+        private void BuscarLocatarioPorID()
         {
             //
             string id;
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, "== Digite o id de cliente ==");
+            CentralizarMensagem(2, 117, 5, " == Digite o id de cliente == ");
             id = Console.ReadLine();
             //
 
 
             if (int.TryParse(id, out int numeroInt))
             {
-                var cliente = clienteController.getInfosCliente(numeroInt);
+                var cliente = LocatarioController.BuscarClientePorID(numeroInt); //TODO LocatarioController.BuscarLocatarioPorID
 
                 if (cliente.Rows.Count > 0)
                 {
@@ -159,7 +137,7 @@ namespace TrabalhoPOON3.View
             }
         }
 
-        private void BuscarClientePorCPF()
+        private void BuscarLocatarioPorCPF()
         {
             //
             LimparArea(5, 5, 114, 20);
@@ -168,7 +146,7 @@ namespace TrabalhoPOON3.View
             string cpf = Console.ReadLine();
             //
 
-            var cliente = clienteController.getInfosCliente(cpf);
+            var cliente = ClienteModel.BuscarClientePorCPF(cpf); //TODO LocatarioController.BuscarLocatarioPorCPF
 
             if (cliente.Rows.Count > 0)
             {
