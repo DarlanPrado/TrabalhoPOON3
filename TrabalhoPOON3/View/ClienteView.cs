@@ -112,7 +112,7 @@ namespace TrabalhoPOON3.View
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
             CentralizarMensagem(2, 117, 5, "== Listar Cliente ==");
-            var clientes = clienteController.listClientes();
+            var clientes = clienteController.ListarClientes();
             //
 
 
@@ -142,7 +142,7 @@ namespace TrabalhoPOON3.View
 
             if (int.TryParse(id, out int numeroInt))
             {
-                var cliente = clienteController.getInfosCliente(numeroInt);
+                var cliente = clienteController.BuscarClientePorID(numeroInt);
 
                 if (cliente.Rows.Count > 0)
                 {
@@ -168,7 +168,7 @@ namespace TrabalhoPOON3.View
             string cpf = Console.ReadLine();
             //
 
-            var cliente = clienteController.getInfosCliente(cpf);
+            var cliente = clienteController.BuscarClientePorCPF(cpf);
 
             if (cliente.Rows.Count > 0)
             {
