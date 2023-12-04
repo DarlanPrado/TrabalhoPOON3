@@ -8,6 +8,7 @@ namespace TrabalhoPOON3.View
     {
 
         public ClienteModel clienteController = new ClienteModel();
+        public ImovelModel imovelController = new ImovelModel();
 
         public void MontarClienteView()
         {
@@ -22,8 +23,9 @@ namespace TrabalhoPOON3.View
                     "1 - Cadastrar Cliente",
                     "2 - Listar Clientes",
                     "3 - Buscar Cliente por CPF",
-                    "4 - Imoveis",
-                    "5 - Editar Locatario",
+                    "4 - Imoveis por CPF do Cliente",
+                    "5 - Vincular Imovel ao Cliente",
+                    "6 - Editar Cliente",
                     "0 - Sair"
                 }, 5, 5, 6);
 
@@ -39,9 +41,12 @@ namespace TrabalhoPOON3.View
                         BuscarClientePorCPF();
                         break;
                     case "4":
-                        Imovel(); //TODO
+                        ListarImoveisPorCliente();
                         break;
                     case "5":
+                        VincularImovelAoCliente();
+                        break;
+                    case "6":
                         EditarCliente();
                         break;
                     case "0":
@@ -55,8 +60,48 @@ namespace TrabalhoPOON3.View
             } while (escolha != "0");
         }
 
-        private void Imovel()
+        private void VincularImovelAoCliente()
         {
+            //
+            LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            //
+
+            CentralizarMensagem(2, 117, 5, " == Editar Informações do Cliente == ");
+
+
+            CentralizarMensagem(2, 117, 6, " == CPF == ");
+            string cpf = Console.ReadLine();
+
+            CentralizarMensagem(2, 117, 8, " == Valor do Imovel == ");
+            string valor = Console.ReadLine();
+
+            CentralizarMensagem(2, 117, 10, " == Tipo do Imovel == ");
+            string tipo = Console.ReadLine();
+
+
+
+            clienteController.VincularImovelAoCliente(cpf,valor,tipo);
+
+        }
+
+        private void ListarImoveisPorCliente()
+        {
+            //
+            LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            //
+
+            CentralizarMensagem(2, 117, 5, " == Editar Informações do Cliente == ");
+
+
+            CentralizarMensagem(2, 117, 6, " == CPF == ");
+            string cpf = Console.ReadLine();
+
+            string imovel = imovelController.ListarImoveisDoCliente(cpf);
+            CentralizarMensagem(2, 117, 8, "Os imoveis são:\n");
+            CentralizarMensagem(2, 117, 10,imovel);
+
 
         }
 
@@ -80,13 +125,9 @@ namespace TrabalhoPOON3.View
             CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
             string telefone = Console.ReadLine();
 
-            CentralizarMensagem(2, 117, 12, " == ID == ");
-            int id =int.Parse(Console.ReadLine());
-
-
             try
             {
-                clienteController.EditarCliente(id, cpf, nome, telefone);
+                clienteController.EditarCliente(cpf, nome, telefone);
             }
             catch(Exception ex)
             {
@@ -114,8 +155,9 @@ namespace TrabalhoPOON3.View
             try
             {
                 clienteController.AdicionarCliente(cpf, nome, telefone);
+                LimparArea(5, 5, 114, 20);
                 Console.SetCursorPosition(5, 5);
-                Console.WriteLine("Cliente cadastrado com sucesso.");
+                CentralizarMensagem(2, 117, 5, "Cliente cadastrado com sucesso.");
                 Console.ReadKey();
             }
             catch(Exception ex)
@@ -141,9 +183,40 @@ namespace TrabalhoPOON3.View
             {
                 string clientesString = string.Join(Environment.NewLine, clientes);
                 LimparArea(5, 5, 114, 20);
-                Console.SetCursorPosition(5, 5);
-                Console.WriteLine(clientesString);
-                Console.ReadKey();
+                if (clientesString != null)
+                {
+                    LimparArea(5, 5, 114, 20);
+                    Console.SetCursorPosition(5, 5);
+
+                    // Separar os dados
+                    string[] partes = clientesString.Split(',');
+
+                    // Certifique-se de que há pelo menos 8 partes antes de atribuir
+                    if (partes.Length >= 8)
+                    {
+                        string cpfClientes = partes[0];
+                        string nomeCliente = partes[1];
+                        string numeroCliente = partes[2];
+                        // Adicione as outras variáveis conforme necessário
+
+                        LimparArea(5, 5, 114, 20);
+                        Console.SetCursorPosition(5, 5);
+
+                        // Exemplo de impressão das variáveis
+                        CentralizarMensagem(2, 117, 5, $"CPF Cliente do Contrato: {cpfClientes}");
+                        CentralizarMensagem(2, 117, 6, $"Nome Cliente do Contrato: {nomeCliente}");
+                        CentralizarMensagem(2, 117, 7, $"Numero Cliente do Contrato: {numeroCliente}");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Os dados do contrato não têm o formato esperado.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Contrato não encontrado para o CPF do cliente fornecido.");
+                }
             }
         }
 

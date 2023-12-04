@@ -11,6 +11,7 @@ namespace TrabalhoPOON3.View
             ClienteView clienteView = new ClienteView();
             LocatarioView locatarioView = new LocatarioView();
             ImovelView imovelView = new ImovelView();
+            ContratoView contratoView = new ContratoView();
 
             string opcao;
             List<string> menuPrincipal = new List<string>();
@@ -18,6 +19,7 @@ namespace TrabalhoPOON3.View
             menuPrincipal.Add("1 - Área do Cliente");
             menuPrincipal.Add("2 - Área do Locatário");
             menuPrincipal.Add("3 - Área do Imóvel");
+            menuPrincipal.Add("4 - Área do Contrato");
             menuPrincipal.Add("0 - Sair");
 
             tela.ConfigurarTela();
@@ -40,6 +42,9 @@ namespace TrabalhoPOON3.View
                         break;
                     case "3":
                         imovelView.MontarImovelView();
+                        break;
+                    case "4":
+                        contratoView.MontarContratoView();
                         break;
                     default:
                         Console.WriteLine("Opção inválida. Tente novamente.");

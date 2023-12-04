@@ -10,17 +10,23 @@ namespace TrabalhoPOON3.Model
     public class ContratoModel
     {
         // Define o caminho do arquivo de texto que armazena os contratos
-        private static string contratoFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\contrato.txt";
+        private static string contratoFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Contrato.txt";
+        private static string locatarioFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Locatario.txt";
+        private static string clienteFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Cliente.txt";
+        LocatarioModel locatarioModel = new LocatarioModel();
+        ClienteModel clienteModel = new ClienteModel();
 
-        public static void AdicionarContrato(string idCliente, string idImovel, DateTime dataInicio, DateTime dataFim, double valorAluguel, int numeroParcelas)
+       public void GerarContrato(string cpfCliente,string cpfLocatario)
         {
+            string dadosCliente = clienteModel.BuscarClientePorCPF(cpfCliente);
+            string dadosLocatario = locatarioModel.BuscarLocatarioPorCPF(cpfLocatario);
             try
             {
-                // Cria uma string com os dados do contrato separados por vírgula
-                string contrato = $"{idCliente},{idImovel},{dataInicio},{dataFim},{valorAluguel},{numeroParcelas}";
+                // Cria uma string com os dados do locatario separados por vírgula
+                string locatario = $"{dadosCliente},{dadosLocatario}";
 
-                // Usa o método AppendAllText para adicionar o contrato ao final do arquivo de texto
-                File.AppendAllText(contratoFilePath, contrato + Environment.NewLine);
+                // Usa o método AppendAllText para adicionar o locatario ao final do arquivo de texto
+                File.AppendAllText(contratoFilePath, locatario + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -28,48 +34,35 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public static void EditarContrato(int id, string idCliente, string idImovel, DateTime dataInicio, DateTime dataFim, double valorAluguel, int numeroParcelas)
-        {
-            try
-            {
-                // Lê todas as linhas do arquivo de texto e armazena em um array
-                string[] contratos = File.ReadAllLines(contratoFilePath);
-
-                // Verifica se o id é válido e menor que o tamanho do array
-                if (id > 0 && id <= contratos.Length)
-                {
-                    // Substitui a linha correspondente ao id pelo novo contrato
-                    contratos[id - 1] = $"{idCliente},{idImovel},{dataInicio},{dataFim},{valorAluguel},{numeroParcelas}";
-
-                    // Escreve o array atualizado no arquivo de texto
-                    File.WriteAllLines(contratoFilePath, contratos);
-                }
-                else
-                {
-                    // Lança uma exceção se o id for inválido
-                    throw new ArgumentException("Id inválido");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static List<string> ListarContratos()
+        public string BuscarContratoPorCPF(string cpf)
         {
             try
             {
                 // Lê todas as linhas do arquivo de texto que armazena os contratos
                 string[] contratos = File.ReadAllLines(contratoFilePath);
 
-                // Converte o array de contratos para uma lista e retorna
-                return contratos.ToList();
+                // Procura o contrato pelo CPF
+                foreach (string contrato in contratos)
+                {
+                    string[] dadosContrato = contrato.Split(',');
+
+                    // Verifica se o contrato pertence ao cliente ou locatário com o CPF fornecido
+                    if (dadosContrato.Length >= 2 && (dadosContrato[0] == cpf || dadosContrato[1] == cpf))
+                    {
+                        // Retorna os dados do contrato se encontrado
+                        return contrato;
+                    }
+                }
+
+                // Retorna null se o contrato não for encontrado
+                return null;
             }
             catch (Exception ex)
             {
+                // Trata exceções durante a leitura do arquivo de contratos
                 throw ex;
             }
         }
+
     }
 }

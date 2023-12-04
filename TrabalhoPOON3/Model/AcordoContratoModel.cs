@@ -10,7 +10,7 @@ namespace TrabalhoPOON3.Model
     internal class AcordoContratoModel : Database
     {
         // Define o caminho do arquivo de texto que armazena os boletos
-        private static string boletoFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\boleto.txt";
+        private static string boletoFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Boleto.txt";
 
         public static void gerarBoleto(string idContrato, int numeroParcela, string status, DateTime dataVencimento, double valor)
         {

@@ -7,17 +7,34 @@ using System.Threading.Tasks;
 
 namespace TrabalhoPOON3.Model
 {
-    internal class ImovelModel : Database
+    public class ImovelModel
     {
         // Define o caminho do arquivo de texto que armazena os imoveis
-        private static string imovelFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\imovel.txt";
+        private static string imovelFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Imovel.txt";
 
         // Define o caminho do arquivo de texto que armazena a relação entre clientes e imoveis
-        private static string clienteImovelFilePath = "cliente_imovel.txt";
+        private static string clienteImovelFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Cliente.txt";
 
-        public void AdicionarImovel(string cpfCliente, string TipoImovel, double valor)
+
+        public List<string> ListarImovel()
         {
-            int idImovel = 0;
+            try
+            {
+                // Lê todas as linhas do arquivo de texto e armazena em um array
+                string[] imovel = File.ReadAllLines(imovelFilePath);
+
+                // Converte o array de clientes para uma lista e retorna
+                return imovel.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public void AdicionarImovel(string TipoImovel, double valor)
+        {
 
             try
             {
@@ -26,39 +43,6 @@ namespace TrabalhoPOON3.Model
 
                 // Usa o método AppendAllText para adicionar o imovel ao final do arquivo de texto
                 File.AppendAllText(imovelFilePath, imovel + Environment.NewLine);
-
-                // Obtém o número de linhas do arquivo de texto, que corresponde ao id do imovel
-                idImovel = File.ReadAllLines(imovelFilePath).Length;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            try
-            {
-                // Cria uma string com os dados da relação entre cliente e imovel separados por vírgula
-                string clienteImovel = $"{cpfCliente},{idImovel},1";
-
-                // Usa o método AppendAllText para adicionar a relação ao final do arquivo de texto
-                File.AppendAllText(clienteImovelFilePath, clienteImovel + Environment.NewLine);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-        }
-
-        public void AdicionarImovelAoCliente(string idImovel, string idCliente)
-        {
-            try
-            {
-                // Cria uma string com os dados da relação entre cliente e imovel separados por vírgula
-                string clienteImovel = $"{idCliente},{idImovel},1";
-
-                // Usa o método AppendAllText para adicionar a relação ao final do arquivo de texto
-                File.AppendAllText(clienteImovelFilePath, clienteImovel + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -66,26 +50,25 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public void EditarImovel(string idImovel, string TipoImovel, double valor, bool disponivel)
+
+        public void EditarImovel(string tipoImovel, double valorNovo)
         {
             try
             {
                 // Lê todas as linhas do arquivo de texto e armazena em um array
                 string[] imoveis = File.ReadAllLines(imovelFilePath);
 
-                // Verifica se o id é válido e menor que o tamanho do array
-                if (int.TryParse(idImovel, out int id) && id > 0 && id <= imoveis.Length)
+                for (int i = 0; i < imoveis.Length; i++)
                 {
-                    // Substitui a linha correspondente ao id pelo novo imovel
-                    imoveis[id - 1] = $"{TipoImovel},{valor},{disponivel}";
+                    string[] dadosImovel = imoveis[i].Split(',');
 
-                    // Escreve o array atualizado no arquivo de texto
-                    File.WriteAllLines(imovelFilePath, imoveis);
-                }
-                else
-                {
-                    // Lança uma exceção se o id for inválido
-                    throw new ArgumentException("Id inválido");
+                    if (dadosImovel.Length == 2 && dadosImovel[0] == tipoImovel && double.TryParse(dadosImovel[1], out double valorAtual))
+                    {
+                        // Atualiza o valor do imóvel
+                        imoveis[i] = $"{tipoImovel},{valorNovo}";
+                        File.WriteAllLines(imovelFilePath, imoveis);
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -93,6 +76,7 @@ namespace TrabalhoPOON3.Model
                 throw ex;
             }
         }
+
 
         public string ListarImoveisDoCliente(string cpfCliente)
         {

@@ -24,9 +24,8 @@ namespace TrabalhoPOON3.View
                 {
                     "1 - Cadastrar Locatario",
                     "2 - Listar Locatario",
-                    "3 - Buscar Locatario por ID",
-                    "4 - Buscar Locatario por CPF",
-                    "5 - Editar Locatario",
+                    "3 - Buscar Locatario por CPF",
+                    "4 - Editar Locatario",
                     "0 - Sair"
                 }, 5, 5, 6);
 
@@ -38,11 +37,11 @@ namespace TrabalhoPOON3.View
                     case "2":
                         ListarLocatarios();
                         break;
-                    case "4":
+                    case "3":
                         BuscarLocatarioPorCPF();
                         break;
-                    case "5":
-                        EditarLocatario(); //TODO Editar Locatario
+                    case "4":
+                        EditarLocatario();
                         break;
                     case "0":
                         Console.WriteLine("Saindo da Área do Locatario.");
@@ -57,7 +56,32 @@ namespace TrabalhoPOON3.View
 
         private void EditarLocatario()
         {
+            //
+            LimparArea(5, 5, 114, 20);
+            Console.SetCursorPosition(5, 5);
+            //
 
+            CentralizarMensagem(2, 117, 5, " == Editar Informações do Locatario == ");
+
+
+            CentralizarMensagem(2, 117, 6, " == CPF == ");
+            string cpf = Console.ReadLine();
+
+            CentralizarMensagem(2, 117, 8, " == NOME == ");
+            string nome = Console.ReadLine();
+
+            CentralizarMensagem(2, 117, 10, " == TELEFONE == ");
+            string telefone = Console.ReadLine();
+
+
+            try
+            {
+                locatarioController.EditarLocatario(cpf, nome, telefone);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void CadastrarLocatario()
@@ -92,23 +116,24 @@ namespace TrabalhoPOON3.View
 
         private void ListarLocatarios()
         {
+            //
             LimparArea(5, 5, 114, 20);
             Console.SetCursorPosition(5, 5);
-            CentralizarMensagem(2, 117, 5, " == Listar Locatario == ");
-
+            CentralizarMensagem(2, 117, 5, " == Listar Cliente == ");
             List<string> locatarios = locatarioController.ListarLocatarios();
+            //
 
             if (locatarios.Count == 0)
             {
-                Console.WriteLine("Nenhum Locatario cadastrado.");
+                Console.WriteLine("Nenhum cliente cadastrado.");
             }
             else
             {
-                foreach (string locatario in locatarios)
-                {
-                    Console.WriteLine(locatario);
-                    Console.ReadKey();
-                }
+                string locatariosString = string.Join(Environment.NewLine, locatarios);
+                LimparArea(5, 5, 114, 20);
+                Console.SetCursorPosition(5, 5);
+                Console.WriteLine(locatariosString);
+                Console.ReadKey();
             }
         }
 

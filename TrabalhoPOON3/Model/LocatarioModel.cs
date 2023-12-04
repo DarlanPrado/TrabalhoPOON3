@@ -10,7 +10,7 @@ namespace TrabalhoPOON3.Model
     public class LocatarioModel : Database
     {
         // Define o caminho do arquivo de texto que armazena os locatarios
-        private static string locatarioFilePath = "C:\\Users\\vinicius.zanatta\\Desktop\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\locatario.txt";
+        private static string locatarioFilePath = "C:\\Users\\vinic\\source\\repos\\TrabalhoPOON3\\TrabalhoPOON3\\Txt\\Locatario.txt";
 
         public void AdicionarLocatario(string cpf, string nome, string telefone)
         {
@@ -28,27 +28,26 @@ namespace TrabalhoPOON3.Model
             }
         }
 
-        public void EditarLocatario(int id, string cpf, string nome, string telefone)
+        public void EditarLocatario(string cpf, string nome, string telefone)
         {
             try
             {
                 // Lê todas as linhas do arquivo de texto e armazena em um array
-                string[] locatarios = File.ReadAllLines(locatarioFilePath);
+                string[] locatario = File.ReadAllLines(locatarioFilePath);
 
-                // Verifica se o id é válido e menor que o tamanho do array
-                if (id > 0 && id <= locatarios.Length)
-                {
-                    // Substitui a linha correspondente ao id pelo novo locatario
-                    locatarios[id - 1] = $"{cpf},{nome},{telefone}";
 
-                    // Escreve o array atualizado no arquivo de texto
-                    File.WriteAllLines(locatarioFilePath, locatarios);
-                }
-                else
+                for (int i = 0; i < locatario.Length; i++)
                 {
-                    // Lança uma exceção se o id for inválido
-                    throw new ArgumentException("Id inválido");
+
+                    string[] dadosCliente = locatario[i].Split(',');
+                    if (dadosCliente[0] == cpf)
+                    {
+                        // Retorna os dados do cliente se encontrado
+                        locatario[i] = $"{cpf},{nome},{telefone}";
+
+                    }
                 }
+                File.WriteAllLines(locatarioFilePath, locatario);
             }
             catch (Exception ex)
             {
